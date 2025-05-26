@@ -49,23 +49,48 @@
   justify-content: center;
 }
 
+.share-link-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 0.25rem;
+}
+
+.share-link-input {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  min-width: 300px;
+  outline: none;
+  cursor: text;
+}
+
+.share-link-input:focus {
+  color: var(--text-color);
+}
+
 .share-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background-color: var(--button-secondary);
   color: var(--text-color);
-  border: 1px solid var(--card-border);
-  padding: 0.5rem 1.25rem;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
   font-weight: 500;
   transition: all 0.2s;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .share-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: var(--text-secondary);
+  background-color: var(--button-hover);
   transform: translateY(-1px);
 }
 
@@ -97,6 +122,29 @@
   justify-content: center;
   align-items: center;
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .game-header {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+  }
+  
+  .share-link-container {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .share-link-input {
+    min-width: auto;
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  
+  .share-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .betting-modal-wrapper {

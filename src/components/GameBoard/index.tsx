@@ -136,6 +136,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBac
 
   const [betAmount, setBetAmount] = useState<number>(0);
   const [hasBet, setHasBet] = useState<boolean>(false);
+  const [showCopied, setShowCopied] = useState<boolean>(false);
 
   const currentPlayer = players.find(p => p.name === username);
   const isPlayerTurn = currentPlayer?.isCurrentTurn || false;
@@ -159,7 +160,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBac
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareableLink);
-    // You could add a toast notification here
+    setShowCopied(true);
+    setTimeout(() => setShowCopied(false), 3000);
   };
 
   return (
@@ -170,12 +172,32 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBac
           <span className="game-code">{gameCode}</span>
         </div>
         <div className="share-section">
-          <button className="share-button" onClick={handleCopyLink}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Copy Link
-          </button>
+          <div className="share-link-container">
+            <input 
+              type="text" 
+              value={shareableLink} 
+              readOnly 
+              className="share-link-input"
+              onClick={(e) => e.currentTarget.select()}
+            />
+            <button className="share-button" onClick={handleCopyLink}>
+              {showCopied ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
         </div>
         <button className="back-to-lobby-btn" onClick={onBackToLobby}>
           Back to Lobby
