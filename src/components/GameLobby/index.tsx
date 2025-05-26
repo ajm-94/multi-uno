@@ -183,9 +183,13 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
                   <div className="room-status">
                     <button 
                       className="spectate-btn"
-                      onClick={() => console.log('Spectate room:', room.id)}
+                      onClick={() => {
+                        setRoomId(room.id);
+                        setActiveRoom(room.id);
+                        setIsPlaying(true);
+                      }}
                     >
-                      Spectate
+                      Watch
                     </button>
                   </div>
                 </div>
