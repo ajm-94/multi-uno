@@ -1,0 +1,101 @@
+.betting-modal {
+  background-color: #0c0d14;
+  border-radius: 0;
+  padding: 24px;
+  width: 350px;
+  color: white;
+  border-right: 1px solid #1a1b25;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.betting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.betting-title {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-icon {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.bet-amount {
+  font-size: 14px;
+  color: #8b8b8b;
+  text-align: right;
+}
+
+.bet-input-container {
+  display: flex;
+  align-items: center;
+  background-color: #13141c;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #21232d;
+}
+
+.currency-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #4e56f6;
+  border-radius: 50%;
+  margin-right: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.bet-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.bet-input::placeholder {
+  color: #5d5d5d;
+}
+
+
+.bet-button {
+  background-color: #a3b60a;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.bet-button:hover {
+  background-color: #b7dd00;
+}
+
+.bet-button:disabled {
+  background-color: #4d4d4d;
+  color: #8b8b8b;
+  cursor: not-allowed;
+}

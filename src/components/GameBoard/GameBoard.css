@@ -1,0 +1,327 @@
+/* Main game board container */
+.game-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: #0c0c16;
+  position: relative;
+  overflow: hidden;
+}
+
+.betting-modal-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  height: 100%;
+  border-right: 1px solid #1a1b25;
+}
+
+.player-label {
+  background-color: #242632;
+  color: white;
+  border-radius: 20px;
+  padding: 6px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+}
+
+.dealer-label {
+  background-color: #2c2e3d;
+  margin: 20px auto 30px;
+}
+
+.you-label {
+  background-color: #7d8827;
+  margin: 40px auto 20px;
+  margin-bottom: 20px;
+  position: relative;
+  bottom: -20px;
+}
+
+/* Game table styling */
+.game-table {
+  width: 900px;
+  height: 700px;
+  background-color: #07582e; /* Classic card table green */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  border: 15px solid #0e4125;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.game-table.dark-theme {
+  background-color: #141424;
+  border: 15px solid #0d0d1e;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+}
+
+/* Opponent area (top of table) */
+.opponent-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.dealer-cards-container {
+  display: flex;
+  justify-content: center;
+  gap: -10px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.dealer-cards-container .uno-card:nth-child(2) {
+  margin-left: -30px;
+}
+
+/* Center table area */
+.table-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.card-area {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.center-area-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  max-width: 230px;
+  margin: 0 auto;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 30px 20px;
+  background-color: rgba(20, 20, 36, 0.5);
+}
+
+.deck-area, .discard-area {
+  position: relative;
+  display: inline-block;
+}
+
+.deck-area {
+  margin-right: 10px;
+}
+
+.discard-area {
+  margin-left: 10px;
+}
+
+.diamond-shape {
+  width: 45px;
+  height: 45px;
+  background-color: #d64b4b;
+  position: absolute;
+  top: 50%;
+  right: -60px;
+  transform: translateY(-50%) rotate(45deg);
+  z-index: 1;
+}
+
+/* Player area (bottom of table) */
+.player-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.player-hand-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.player-cards {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 0 auto;
+  width: 260px;
+}
+
+.player-cards .uno-card {
+  margin-right: -40px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.player-cards .uno-card:last-child {
+  margin-right: 0;
+}
+
+/* UNO Card Styling */
+.uno-card {
+  width: 70px;
+  height: 100px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.red-card {
+  background-color: #d64b4b;
+  border: 3px solid #a33838;
+}
+
+.blue-card {
+  background-color: #4b7bd6;
+  border: 3px solid #385fa3;
+}
+
+.card-back {
+  background-color: #d6ff00;
+  border: 3px solid #a0bf00;
+}
+
+.yellow-back {
+  background-color: #d6ff00;
+  border: 3px solid #a0bf00;
+}
+
+.card-number {
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+}
+
+.card-reverse {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.card-reverse:before, .card-reverse:after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid white;
+  border-radius: 50%;
+}
+
+.card-reverse:before {
+  top: 0;
+  left: 0;
+  border-right: transparent;
+  transform: rotate(-45deg);
+}
+
+.card-reverse:after {
+  bottom: 0;
+  right: 0;
+  border-left: transparent;
+  transform: rotate(135deg);
+}
+
+.card-back-design {
+  font-size: 30px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Game over overlay */
+.game-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.game-over-modal {
+  background-color: #1c1e22;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  max-width: 400px;
+  width: 90%;
+}
+
+.game-over-modal h2 {
+  color: #e63946;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.game-over-modal p {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.game-over-modal button {
+  background-color: #4a8cff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.game-over-modal button:hover {
+  background-color: #367af6;
+}
+
+/* Loading state */
+.connecting {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1a1e2e;
+  color: white;
+}
+
+.loader {
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top: 5px solid #e63946;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

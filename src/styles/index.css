@@ -1,0 +1,97 @@
+:root {
+  --primary-color: #4ade80; /* Bright green */
+  --secondary-color: #dc3545;
+  --background-color: #1e293b; /* Dark slate blue */
+  --app-bg: #111827; /* Darker slate for app background */
+  --panel-bg: #1e293b; /* Panel background */
+  --card-bg: #2d3748; /* Card/component background */
+  --text-color: #f8fafc;
+  --text-secondary: #94a3b8;
+  --card-border: #4b5563;
+  --uno-red: #ef4444;
+  --uno-blue: #3b82f6;
+  --uno-green: #10b981;
+  --uno-yellow: #eab308;
+  --button-primary: #4ade80;
+  --button-hover: #22c55e;
+  --button-secondary: #475569;
+  --button-secondary-hover: #64748b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--app-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 1280px;
+  margin: 20px;
+  min-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  background-color: var(--button-secondary);
+  color: white;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--button-secondary-hover);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+input, select {
+  padding: 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+}
+
+h1, h2, h3 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
