@@ -13,6 +13,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
   const [username] = useState<string>('Test'); // Default username is set to "Test"
   const [roomId, setRoomId] = useState<string>('');
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
+  const [activeRoomCode, setActiveRoomCode] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [showCreateGameModal, setShowCreateGameModal] = useState<boolean>(false);
   const [showJoinGameModal, setShowJoinGameModal] = useState<boolean>(false);
@@ -64,6 +65,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
     const newRoomId = generateRandomRoomId();
     setRoomId(newRoomId);
     setActiveRoom(newRoomId);
+    setActiveRoomCode(code);
     
     // Add the new room to available rooms
     setAvailableRooms(prev => [
@@ -91,6 +93,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
     if (room) {
       setRoomId(room.id);
       setActiveRoom(room.id);
+      setActiveRoomCode(room.code);
       setShowJoinGameModal(false);
     } else {
       alert(`No game found with code: ${code}`);
@@ -113,7 +116,8 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
     return (
       <GameBoard 
         username={username} 
-        roomId={activeRoom} 
+        roomId={activeRoom}
+        roomCode={activeRoomCode || activeRoom}
         onBackToLobby={handleExitGame} 
       />
     );
@@ -185,6 +189,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
                       onClick={() => {
                         setRoomId(room.id);
                         setActiveRoom(room.id);
+                        setActiveRoomCode(room.code);
                         setIsPlaying(true);
                       }}
                     >

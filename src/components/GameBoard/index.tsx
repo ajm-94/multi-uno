@@ -6,6 +6,7 @@ import './GameBoard.css';
 interface GameBoardProps {
   username: string;
   roomId: string;
+  roomCode?: string;
   onBackToLobby: () => void;
   gameMode?: {
     type: 'goatedai' | 'ring' | 'tournament';
@@ -121,7 +122,7 @@ const useMockSocket = (username: string, roomId: string) => {
   };
 };
 
-const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, onBackToLobby, gameMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBackToLobby, gameMode }) => {
   const {
     connected,
     players,
@@ -153,8 +154,33 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, onBackToLobby, 
     );
   }
 
+  const gameCode = roomCode || roomId;
+  const shareableLink = `${window.location.origin}?join=${gameCode}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareableLink);
+    // You could add a toast notification here
+  };
+
   return (
     <div className="game-board">
+      <div className="game-header">
+        <div className="game-code-section">
+          <span className="game-code-label">Game Code:</span>
+          <span className="game-code">{gameCode}</span>
+        </div>
+        <div className="share-section">
+          <button className="share-button" onClick={handleCopyLink}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Copy Link
+          </button>
+        </div>
+        <button className="back-to-lobby-btn" onClick={onBackToLobby}>
+          Back to Lobby
+        </button>
+      </div>
       <div className="betting-modal-wrapper">
         <BettingModal onPlaceBet={handlePlaceBet} />
       </div>
@@ -169,9 +195,10 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, onBackToLobby, 
         </div>
       )}
 
-      <div className="game-table dark-theme">
-        {/* Opponent (GoatedAI) area at the top */}
-        <div className="opponent-area">
+      <div className="game-content">
+        <div className="game-table dark-theme">
+          {/* Opponent (GoatedAI) area at the top */}
+          <div className="opponent-area">
           <div className="player-label dealer-label">Dealer</div>
           <div className="dealer-cards-container">
             <div className="card-back uno-card"></div>
@@ -216,6 +243,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, onBackToLobby, 
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
