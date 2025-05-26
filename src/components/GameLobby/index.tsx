@@ -181,15 +181,12 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
                     {room.winningPoints && <span className="room-points">{room.winningPoints} pts</span>}
                   </div>
                   <div className="room-status">
-                    <span className={`status-badge ${room.status}`}>{room.status}</span>
-                    {room.status === 'waiting' && (
-                      <button 
-                        className="join-btn"
-                        onClick={() => handleJoinRoom(room.code)}
-                      >
-                        Join
-                      </button>
-                    )}
+                    <button 
+                      className="spectate-btn"
+                      onClick={() => console.log('Spectate room:', room.id)}
+                    >
+                      Spectate
+                    </button>
                   </div>
                 </div>
               ))

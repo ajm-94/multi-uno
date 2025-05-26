@@ -172,22 +172,6 @@
   align-items: center;
 }
 
-.status-badge {
-  font-size: 0.85rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  text-transform: capitalize;
-}
-
-.status-badge.waiting {
-  background-color: rgba(74, 222, 128, 0.1);
-  color: var(--primary-color);
-}
-
-.status-badge.playing {
-  background-color: rgba(251, 191, 36, 0.1);
-  color: #fbbf24;
-}
 
 .tables-header {
   display: flex;
@@ -299,28 +283,22 @@
   opacity: 0.7;
 }
 
-.join-btn {
-  background-color: var(--button-primary);
-  color: #111827;
-  border: none;
+.spectate-btn {
+  background-color: var(--button-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--card-border);
   border-radius: 4px;
   padding: 0.5rem 1rem;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.join-btn:hover:not(:disabled) {
-  background-color: var(--button-hover);
+.spectate-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--text-secondary);
   transform: translateY(-1px);
-}
-
-.join-btn:disabled {
-  background-color: var(--button-secondary);
-  color: var(--text-secondary);
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .game-type {
