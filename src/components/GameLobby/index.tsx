@@ -175,10 +175,9 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
                 <div key={room.id} className="room-item">
                   <div className="room-info">
                     <span className="room-name">Room {room.id}</span>
-                    <span className="room-players">{room.players}/{room.maxPlayers} players</span>
+                    <span className="room-players">{room.maxPlayers} players</span>
                     <span className="room-stakes">{room.stakes}</span>
                     <span className="room-type">{room.type === 'tournament' ? 'Tournament' : 'Single Game'}</span>
-                    {room.winningPoints && <span className="room-points">{room.winningPoints} pts</span>}
                   </div>
                   <div className="room-status">
                     <button 

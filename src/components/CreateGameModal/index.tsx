@@ -7,8 +7,8 @@ interface CreateGameModalProps {
 }
 
 const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCancel }) => {
-  const [stakes, setStakes] = useState<string>('$5');
-  const [maxPlayers, setMaxPlayers] = useState<number>(4);
+  const [stakes, setStakes] = useState<string>('5');
+  const [maxPlayers] = useState<number>(2);
   const [code, setCode] = useState<string>('');
   const [gameType, setGameType] = useState<'single' | 'tournament'>('single');
   const [winningPoints, setWinningPoints] = useState<number>(250);
@@ -26,10 +26,11 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
       return;
     }
     
+    const formattedStakes = stakes ? `$${stakes}` : '$0';
     if (gameType === 'tournament') {
-      onCreateGame(stakes, maxPlayers, code, gameType, winningPoints);
+      onCreateGame(formattedStakes, maxPlayers, code, gameType, winningPoints);
     } else {
-      onCreateGame(stakes, maxPlayers, code, gameType);
+      onCreateGame(formattedStakes, maxPlayers, code, gameType);
     }
   };
   
@@ -73,36 +74,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
               </div>
             </div>
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="stakes">Stakes:</label>
-            <select 
-              id="stakes" 
-              value={stakes} 
-              onChange={(e) => setStakes(e.target.value)}
-              className="form-control"
-            >
-              <option value="$1">$1</option>
-              <option value="$2">$2</option>
-              <option value="$5">$5</option>
-              <option value="$10">$10</option>
-              <option value="$20">$20</option>
-              <option value="$50">$50</option>
-            </select>
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="currency">Currency:</label>
-            <select 
-              id="currency" 
-              value="ETH" 
-              disabled
-              className="form-control"
-            >
-              <option value="ETH">ETH</option>
-            </select>
-          </div>
-          
           {gameType === 'tournament' && (
             <div className="form-group">
               <label htmlFor="winningPoints">Winning Points:</label>
@@ -126,18 +98,43 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
           )}
           
           <div className="form-group">
+            <label htmlFor="stakes">Amount:</label>
+            <div className="amount-input-wrapper">
+              <span className="currency-symbol">$</span>
+              <input
+                type="number"
+                id="stakes"
+                value={stakes}
+                onChange={(e) => setStakes(e.target.value)}
+                className="form-control amount-input"
+                placeholder="0"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="currency">Currency:</label>
+            <select 
+              id="currency" 
+              value="ETH" 
+              disabled
+              className="form-control"
+            >
+              <option value="ETH">ETH</option>
+            </select>
+          </div>
+          
+          <div className="form-group">
             <label htmlFor="maxPlayers">Number of Players:</label>
             <select 
               id="maxPlayers" 
               value={maxPlayers} 
-              onChange={(e) => setMaxPlayers(Number(e.target.value))}
+              disabled
               className="form-control"
             >
               <option value="2">2 Players</option>
-              <option value="3">3 Players</option>
-              <option value="4">4 Players</option>
-              <option value="5">5 Players</option>
-              <option value="6">6 Players</option>
             </select>
           </div>
           
