@@ -17,6 +17,12 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [showCreateGameModal, setShowCreateGameModal] = useState<boolean>(false);
   const [showJoinGameModal, setShowJoinGameModal] = useState<boolean>(false);
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [createdGameDetails, setCreatedGameDetails] = useState<{
+    code: string;
+    stakes: string;
+    type: 'single' | 'tournament';
+  } | null>(null);
   const [availableRooms, setAvailableRooms] = useState<{
     id: string, 
     players: number, 
@@ -82,8 +88,16 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
       }
     ]);
     
-    // Close the modal
+    // Store game details for confirmation
+    setCreatedGameDetails({
+      code,
+      stakes,
+      type: gameType
+    });
+    
+    // Close the modal and show confirmation
     setShowCreateGameModal(false);
+    setShowConfirmation(true);
   };
 
   const handleJoinRoom = (code: string) => {
@@ -138,6 +152,65 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
           onJoinGame={handleJoinRoom}
           onCancel={handleCloseJoinGameModal}
         />
+      )}
+
+      {showConfirmation && createdGameDetails && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <h2>Game Created Successfully!</h2>
+            <div className="confirmation-details">
+              <div className="detail-row">
+                <span className="detail-label">Game Code:</span>
+                <span className="detail-value game-code-display">{createdGameDetails.code}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Type:</span>
+                <span className="detail-value">{createdGameDetails.type === 'tournament' ? 'Tournament' : 'Single Game'}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Stakes:</span>
+                <span className="detail-value">{createdGameDetails.stakes}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Players:</span>
+                <span className="detail-value">2 players</span>
+              </div>
+            </div>
+            <div className="share-info">
+              <p>Share this code with your opponent to join the game</p>
+              <div className="share-url-display">
+                <input 
+                  type="text" 
+                  value={`${window.location.origin}?join=${createdGameDetails.code}`}
+                  readOnly
+                  className="share-url-input"
+                  onClick={(e) => e.currentTarget.select()}
+                />
+              </div>
+            </div>
+            <div className="confirmation-buttons">
+              <button 
+                className="cancel-btn"
+                onClick={() => {
+                  setShowConfirmation(false);
+                  setActiveRoom(null);
+                  setActiveRoomCode(null);
+                }}
+              >
+                Back to Lobby
+              </button>
+              <button 
+                className="start-game-btn"
+                onClick={() => {
+                  setShowConfirmation(false);
+                  handleStartGame();
+                }}
+              >
+                Enter Game Room
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="lobby-content">

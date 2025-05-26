@@ -442,3 +442,166 @@
     padding: 1rem 1.5rem;
   }
 }
+
+/* Confirmation Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(4px);
+}
+
+.confirmation-modal {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease-out;
+}
+
+.confirmation-modal h2 {
+  color: var(--primary-color);
+  margin: 0 0 2rem 0;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.confirmation-details {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.detail-value {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.game-code-display {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  letter-spacing: 0.1em;
+  background-color: rgba(74, 222, 128, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.share-info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.share-info p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.share-url-display {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 0.25rem;
+}
+
+.share-url-input {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 0.75rem;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  cursor: text;
+}
+
+.share-url-input:focus {
+  color: var(--text-color);
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirmation-buttons button {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.confirmation-buttons .cancel-btn {
+  background-color: var(--button-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--card-border);
+}
+
+.confirmation-buttons .cancel-btn:hover {
+  background-color: var(--button-secondary-hover);
+  transform: translateY(-1px);
+}
+
+.confirmation-buttons .start-game-btn {
+  background-color: var(--primary-color);
+  color: #111827;
+  border: none;
+}
+
+.confirmation-buttons .start-game-btn:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
