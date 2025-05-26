@@ -62,6 +62,12 @@
   outline: none;
 }
 
+.form-control:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .form-text {
   display: block;
   font-size: 0.8rem;

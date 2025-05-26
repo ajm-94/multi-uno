@@ -90,6 +90,18 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
               <option value="$50">$50</option>
             </select>
           </div>
+
+          <div className="form-group">
+            <label htmlFor="currency">Currency:</label>
+            <select 
+              id="currency" 
+              value="ETH" 
+              disabled
+              className="form-control"
+            >
+              <option value="ETH">ETH</option>
+            </select>
+          </div>
           
           {gameType === 'tournament' && (
             <div className="form-group">
