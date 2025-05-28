@@ -14,6 +14,21 @@ interface GameBoardProps {
     stakes?: string;
     winningPoints?: number;
   };
+  showJoinConfirmation?: boolean;
+  joinedGameDetails?: {
+    code: string;
+    betAmount: string;
+  } | null;
+  onConfirmJoin?: () => void;
+  onCancelJoin?: () => void;
+  showCreateConfirmation?: boolean;
+  createdGameDetails?: {
+    code: string;
+    stakes: string;
+    type: 'single' | 'tournament';
+  } | null;
+  onStartGame?: () => void;
+  onRejectGame?: () => void;
 }
 
 // We'll define the card interface and sample data
@@ -122,7 +137,21 @@ const useMockSocket = (username: string, roomId: string) => {
   };
 };
 
-const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBackToLobby, gameMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ 
+  username, 
+  roomId, 
+  roomCode, 
+  onBackToLobby, 
+  gameMode,
+  showJoinConfirmation,
+  joinedGameDetails,
+  onConfirmJoin,
+  onCancelJoin,
+  showCreateConfirmation,
+  createdGameDetails,
+  onStartGame,
+  onRejectGame
+}) => {
   const {
     connected,
     players,
@@ -166,6 +195,66 @@ const GameBoard: React.FC<GameBoardProps> = ({ username, roomId, roomCode, onBac
 
   return (
     <div className="game-board">
+      {showJoinConfirmation && joinedGameDetails && (
+        <div className="modal-overlay" style={{ zIndex: 1000 }}>
+          <div className="confirmation-modal">
+            <div className="confirmation-details">
+              <div className="detail-row">
+                <span className="detail-label">Bet Amount:</span>
+                <span className="detail-value" style={{ fontSize: '1.25rem', color: 'var(--primary-color)' }}>
+                  {joinedGameDetails.betAmount}
+                </span>
+              </div>
+            </div>
+            <div className="confirmation-buttons">
+              <button 
+                className="cancel-btn"
+                onClick={onCancelJoin}
+              >
+                Cancel
+              </button>
+              <button 
+                className="start-game-btn"
+                onClick={onConfirmJoin}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showCreateConfirmation && createdGameDetails && (
+        <div className="modal-overlay" style={{ zIndex: 1000 }}>
+          <div className="confirmation-modal">
+            <div className="confirmation-details">
+              <div className="detail-row">
+                <span className="detail-label">Opponent Name:</span>
+                <span className="detail-value">Saket</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Bet Amount:</span>
+                <span className="detail-value" style={{ fontSize: '1.25rem', color: 'var(--primary-color)' }}>
+                  {createdGameDetails.stakes}
+                </span>
+              </div>
+            </div>
+            <div className="confirmation-buttons">
+              <button 
+                className="cancel-btn"
+                onClick={onRejectGame}
+              >
+                Reject
+              </button>
+              <button 
+                className="start-game-btn"
+                onClick={onStartGame}
+              >
+                Start Game
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="game-header">
         <div className="game-code-section">
           <span className="game-code-label">Game Code:</span>

@@ -12,7 +12,7 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) {
-      alert('Please enter a game code');
+      alert('Please enter a table code');
       return;
     }
     onJoinGame(code);
@@ -21,11 +21,11 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
   return (
     <div className="modal-overlay">
       <div className="join-game-modal">
-        <h2>Join Game</h2>
+        <h2>Join Table</h2>
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="code">Game Code:</label>
+            <label htmlFor="code">Table Code:</label>
             <input
               type="text"
               id="code"
@@ -34,11 +34,11 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
               className="form-control"
               maxLength={10}
               required
-              placeholder="Enter the game code"
+              placeholder="Enter the table code"
               autoComplete="off"
               autoFocus
             />
-            <small className="form-text">Enter the code provided by the game creator</small>
+            <small className="form-text">Enter the code provided by the table host</small>
           </div>
           
           <div className="modal-buttons">
@@ -46,7 +46,7 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
               Cancel
             </button>
             <button type="submit" className="join-btn">
-              Join Game
+              Join Table
             </button>
           </div>
         </form>

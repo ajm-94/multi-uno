@@ -18,34 +18,17 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
   const [showCreateGameModal, setShowCreateGameModal] = useState<boolean>(false);
   const [showJoinGameModal, setShowJoinGameModal] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [showJoinConfirmation, setShowJoinConfirmation] = useState<boolean>(false);
+  const [showCreateConfirmation, setShowCreateConfirmation] = useState<boolean>(false);
   const [createdGameDetails, setCreatedGameDetails] = useState<{
     code: string;
     stakes: string;
     type: 'single' | 'tournament';
   } | null>(null);
-  const [availableRooms, setAvailableRooms] = useState<{
-    id: string, 
-    players: number, 
-    maxPlayers: number, 
-    status: 'waiting' | 'playing', 
-    stakes: string,
-    type: 'single' | 'tournament',
-    code: string,
-    winningPoints?: number
-  }[]>([]);
-
-  // Mock available rooms
-  useEffect(() => {
-    // Simulate fetching available rooms
-    const mockRooms = [
-      { id: 'UNO123', players: 2, maxPlayers: 4, status: 'waiting' as const, stakes: '$5', type: 'single' as const, code: 'RED123' },
-      { id: 'GAME456', players: 3, maxPlayers: 4, status: 'playing' as const, stakes: '$10', type: 'tournament' as const, code: 'BLUE456', winningPoints: 250 },
-      { id: 'FUN789', players: 1, maxPlayers: 3, status: 'waiting' as const, stakes: '$2', type: 'single' as const, code: 'GREEN789' },
-      { id: 'HIGH123', players: 2, maxPlayers: 6, status: 'waiting' as const, stakes: '$20', type: 'tournament' as const, code: 'GOLD123', winningPoints: 500 },
-      { id: 'LOW456', players: 1, maxPlayers: 2, status: 'waiting' as const, stakes: '$1', type: 'single' as const, code: 'BLACK456' },
-    ];
-    setAvailableRooms(mockRooms);
-  }, []);
+  const [joinedGameDetails, setJoinedGameDetails] = useState<{
+    code: string;
+    betAmount: string;
+  } | null>(null);
 
   const generateRandomRoomId = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -73,21 +56,6 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
     setActiveRoom(newRoomId);
     setActiveRoomCode(code);
     
-    // Add the new room to available rooms
-    setAvailableRooms(prev => [
-      ...prev,
-      { 
-        id: newRoomId, 
-        players: 1, 
-        maxPlayers, 
-        status: 'waiting', 
-        stakes, 
-        type: gameType,
-        code, // Store the code with the room data
-        ...(gameType === 'tournament' && winningPoints ? { winningPoints } : {})
-      }
-    ]);
-    
     // Store game details for confirmation
     setCreatedGameDetails({
       code,
@@ -95,23 +63,29 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
       type: gameType
     });
     
-    // Close the modal and show confirmation
+    // Close the modal and navigate to game board
     setShowCreateGameModal(false);
-    setShowConfirmation(true);
+    setShowCreateConfirmation(true);
+    setIsPlaying(true);
   };
 
   const handleJoinRoom = (code: string) => {
-    // Find room by code
-    const room = availableRooms.find(room => room.code === code);
+    // For now, we'll create a new room with the provided code
+    // In a real implementation, this would connect to an existing room
+    const newRoomId = generateRandomRoomId();
+    setRoomId(newRoomId);
+    setActiveRoom(newRoomId);
+    setActiveRoomCode(code);
     
-    if (room) {
-      setRoomId(room.id);
-      setActiveRoom(room.id);
-      setActiveRoomCode(room.code);
-      setShowJoinGameModal(false);
-    } else {
-      alert(`No game found with code: ${code}`);
-    }
+    // Set joined game details for confirmation
+    setJoinedGameDetails({
+      code: code,
+      betAmount: '$10' // This would come from the actual game data in a real implementation
+    });
+    
+    setShowJoinGameModal(false);
+    setShowJoinConfirmation(true);
+    setIsPlaying(true); // Navigate to game board immediately
   };
 
   const handleStartGame = () => {
@@ -132,7 +106,31 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
         username={username} 
         roomId={activeRoom}
         roomCode={activeRoomCode || activeRoom}
-        onBackToLobby={handleExitGame} 
+        onBackToLobby={handleExitGame}
+        showJoinConfirmation={showJoinConfirmation}
+        joinedGameDetails={joinedGameDetails}
+        onConfirmJoin={() => {
+          setShowJoinConfirmation(false);
+        }}
+        onCancelJoin={() => {
+          setShowJoinConfirmation(false);
+          setIsPlaying(false);
+          setActiveRoom(null);
+          setActiveRoomCode(null);
+          setJoinedGameDetails(null);
+        }}
+        showCreateConfirmation={showCreateConfirmation}
+        createdGameDetails={createdGameDetails}
+        onStartGame={() => {
+          setShowCreateConfirmation(false);
+        }}
+        onRejectGame={() => {
+          setShowCreateConfirmation(false);
+          setIsPlaying(false);
+          setActiveRoom(null);
+          setActiveRoomCode(null);
+          setCreatedGameDetails(null);
+        }}
       />
     );
   }
@@ -154,65 +152,6 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
         />
       )}
 
-      {showConfirmation && createdGameDetails && (
-        <div className="modal-overlay">
-          <div className="confirmation-modal">
-            <h2>Game Created Successfully!</h2>
-            <div className="confirmation-details">
-              <div className="detail-row">
-                <span className="detail-label">Game Code:</span>
-                <span className="detail-value game-code-display">{createdGameDetails.code}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Type:</span>
-                <span className="detail-value">{createdGameDetails.type === 'tournament' ? 'Tournament' : 'Single Game'}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Stakes:</span>
-                <span className="detail-value">{createdGameDetails.stakes}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Players:</span>
-                <span className="detail-value">2 players</span>
-              </div>
-            </div>
-            <div className="share-info">
-              <p>Share this code with your opponent to join the game</p>
-              <div className="share-url-display">
-                <input 
-                  type="text" 
-                  value={`${window.location.origin}?join=${createdGameDetails.code}`}
-                  readOnly
-                  className="share-url-input"
-                  onClick={(e) => e.currentTarget.select()}
-                />
-              </div>
-            </div>
-            <div className="confirmation-buttons">
-              <button 
-                className="cancel-btn"
-                onClick={() => {
-                  setShowConfirmation(false);
-                  setActiveRoom(null);
-                  setActiveRoomCode(null);
-                }}
-              >
-                Back to Lobby
-              </button>
-              <button 
-                className="start-game-btn"
-                onClick={() => {
-                  setShowConfirmation(false);
-                  handleStartGame();
-                }}
-              >
-                Enter Game Room
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="lobby-content">
         <div className="lobby-header">
           {onBackToLanding && (
@@ -232,48 +171,16 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
             className="create-game-btn"
             onClick={handleOpenCreateGameModal}
           >
-            Create Game
+            Start My Table
           </button>
           <button 
             className="join-game-btn"
             onClick={handleOpenJoinGameModal}
           >
-            Join Game
+            Join Table
           </button>
         </div>
 
-        <div className="available-rooms">
-          <h2>Available Rooms</h2>
-          <div className="rooms-list">
-            {availableRooms.length === 0 ? (
-              <p className="no-rooms">No active rooms. Create one to get started!</p>
-            ) : (
-              availableRooms.map(room => (
-                <div key={room.id} className="room-item">
-                  <div className="room-info">
-                    <span className="room-name">Room {room.id}</span>
-                    <span className="room-players">{room.maxPlayers} players</span>
-                    <span className="room-stakes">{room.stakes}</span>
-                    <span className="room-type">{room.type === 'tournament' ? 'Tournament' : 'Single Game'}</span>
-                  </div>
-                  <div className="room-status">
-                    <button 
-                      className="spectate-btn"
-                      onClick={() => {
-                        setRoomId(room.id);
-                        setActiveRoom(room.id);
-                        setActiveRoomCode(room.code);
-                        setIsPlaying(true);
-                      }}
-                    >
-                      Watch
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
 
         {activeRoom && (
           <div className="active-room">

@@ -133,6 +133,16 @@
   background-color: rgba(74, 222, 128, 0.1);
 }
 
+.game-type-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.game-type-option.disabled:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .game-type-indicator {
   display: inline-block;
   width: 12px;

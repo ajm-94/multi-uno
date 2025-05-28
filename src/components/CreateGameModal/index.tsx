@@ -37,7 +37,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
   return (
     <div className="modal-overlay">
       <div className="create-game-modal">
-        <h2>Create New Game</h2>
+        <h2>Start New Table</h2>
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -50,9 +50,9 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
               className="form-control"
               maxLength={10}
               required
-              placeholder="Enter a unique code for your game"
+              placeholder="Enter a unique code for your table"
             />
-            <small className="form-text">This code will be used by others to join your game</small>
+            <small className="form-text">This code will be used by others to join your table</small>
           </div>
 
           <div className="form-group">
@@ -66,8 +66,8 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
                 <span>Single Game</span>
               </div>
               <div 
-                className={`game-type-option ${gameType === 'tournament' ? 'selected' : ''}`}
-                onClick={() => setGameType('tournament')}
+                className={`game-type-option disabled`}
+                style={{ cursor: 'not-allowed', opacity: 0.5 }}
               >
                 <span className="game-type-indicator tournament"></span>
                 <span>Tournament</span>
@@ -131,7 +131,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
               Cancel
             </button>
             <button type="submit" className="create-btn">
-              Create Game
+              Start Table
             </button>
           </div>
         </form>
