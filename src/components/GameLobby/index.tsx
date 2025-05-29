@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import GameBoard from '../GameBoard';
+import { useNavigate } from 'react-router-dom';
 import CreateGameModal from '../CreateGameModal';
 import JoinGameModal from '../JoinGameModal';
 import { UnoCard, Player } from '../GameBoard';
@@ -10,25 +10,9 @@ interface GameLobbyProps {
 }
 
 const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
-  const [username] = useState<string>('Test'); // Default username is set to "Test"
-  const [roomId, setRoomId] = useState<string>('');
-  const [activeRoom, setActiveRoom] = useState<string | null>(null);
-  const [activeRoomCode, setActiveRoomCode] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [showCreateGameModal, setShowCreateGameModal] = useState<boolean>(false);
   const [showJoinGameModal, setShowJoinGameModal] = useState<boolean>(false);
-  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-  const [showJoinConfirmation, setShowJoinConfirmation] = useState<boolean>(false);
-  const [showCreateConfirmation, setShowCreateConfirmation] = useState<boolean>(false);
-  const [createdGameDetails, setCreatedGameDetails] = useState<{
-    code: string;
-    stakes: string;
-    type: 'single' | 'tournament';
-  } | null>(null);
-  const [joinedGameDetails, setJoinedGameDetails] = useState<{
-    code: string;
-    betAmount: string;
-  } | null>(null);
 
   const generateRandomRoomId = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -52,89 +36,36 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
 
   const handleCreateRoom = (stakes: string, maxPlayers: number, code: string, gameType: 'single' | 'tournament', winningPoints?: number) => {
     const newRoomId = generateRandomRoomId();
-    setRoomId(newRoomId);
-    setActiveRoom(newRoomId);
-    setActiveRoomCode(code);
     
-    // Store game details for confirmation
-    setCreatedGameDetails({
-      code,
-      stakes,
-      type: gameType
+    // Navigate to game with state
+    navigate(`/game/${newRoomId}`, {
+      state: {
+        showCreateConfirmation: true,
+        createdGameDetails: {
+          code,
+          stakes,
+          type: gameType
+        }
+      }
     });
-    
-    // Close the modal and navigate to game board
-    setShowCreateGameModal(false);
-    setShowCreateConfirmation(true);
-    setIsPlaying(true);
   };
 
   const handleJoinRoom = (code: string) => {
     // For now, we'll create a new room with the provided code
     // In a real implementation, this would connect to an existing room
     const newRoomId = generateRandomRoomId();
-    setRoomId(newRoomId);
-    setActiveRoom(newRoomId);
-    setActiveRoomCode(code);
     
-    // Set joined game details for confirmation
-    setJoinedGameDetails({
-      code: code,
-      betAmount: '$10' // This would come from the actual game data in a real implementation
+    // Navigate to game with state
+    navigate(`/game/${newRoomId}`, {
+      state: {
+        showJoinConfirmation: true,
+        joinedGameDetails: {
+          code: code,
+          betAmount: '$10' // This would come from the actual game data in a real implementation
+        }
+      }
     });
-    
-    setShowJoinGameModal(false);
-    setShowJoinConfirmation(true);
-    setIsPlaying(true); // Navigate to game board immediately
   };
-
-  const handleStartGame = () => {
-    if (activeRoom) {
-      setIsPlaying(true);
-    }
-  };
-
-  const handleExitGame = () => {
-    setIsPlaying(false);
-    setActiveRoom(null);
-  };
-
-  // If playing a game, show the game board
-  if (isPlaying && activeRoom) {
-    return (
-      <GameBoard 
-        username={username} 
-        roomId={activeRoom}
-        roomCode={activeRoomCode || activeRoom}
-        onBackToLobby={handleExitGame}
-        showJoinConfirmation={showJoinConfirmation}
-        joinedGameDetails={joinedGameDetails}
-        onConfirmJoin={() => {
-          setShowJoinConfirmation(false);
-        }}
-        onCancelJoin={() => {
-          setShowJoinConfirmation(false);
-          setIsPlaying(false);
-          setActiveRoom(null);
-          setActiveRoomCode(null);
-          setJoinedGameDetails(null);
-        }}
-        showCreateConfirmation={showCreateConfirmation}
-        createdGameDetails={createdGameDetails}
-        onStartGame={() => {
-          setShowCreateConfirmation(false);
-        }}
-        onRejectGame={() => {
-          setShowCreateConfirmation(false);
-          setIsPlaying(false);
-          setActiveRoom(null);
-          setActiveRoomCode(null);
-          setCreatedGameDetails(null);
-        }}
-      />
-    );
-  }
-
 
   return (
     <div className="game-lobby">
@@ -163,7 +94,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
               Back to Game Modes
             </button>
           )}
-          <h1>Multi Uno Game Lobby</h1>
+          <h1>Uno-Duel Lobby</h1>
         </div>
 
         <div className="lobby-actions">
@@ -182,43 +113,26 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
         </div>
 
 
-        {activeRoom && (
-          <div className="active-room">
-            <div className="room-details">
-              <h3>Room: {activeRoom}</h3>
-              <div className="room-players-list">
-                <div className="player-item current-player">
-                  <div className="player-name">{username} (You)</div>
-                  <div className="player-status">Ready</div>
-                </div>
-                <div className="player-item">
-                  <div className="player-name">Waiting for player...</div>
-                </div>
-                <div className="player-item">
-                  <div className="player-name">Waiting for player...</div>
-                </div>
-                <div className="player-item">
-                  <div className="player-name">Waiting for player...</div>
-                </div>
-              </div>
-
-              <div className="room-controls">
-                <button 
-                  className="start-game-btn"
-                  onClick={handleStartGame}
-                >
-                  Start Game
-                </button>
-                <button 
-                  className="leave-room-btn"
-                  onClick={() => setActiveRoom(null)}
-                >
-                  Leave Room
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      </div>
+      
+      <div style={{ padding: '1rem 1.5rem' }}>
+        <button 
+          onClick={() => {
+            navigate('/game/demo');
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--text-secondary)',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            fontSize: '0.8rem',
+            padding: '0',
+            opacity: 0.7
+          }}
+        >
+          Show Uno Table
+        </button>
       </div>
     </div>
   );

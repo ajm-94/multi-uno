@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../Card';
 import BettingModal from '../BettingModal';
 import './GameBoard.css';
@@ -143,15 +144,47 @@ const GameBoard: React.FC<GameBoardProps> = ({
   roomCode, 
   onBackToLobby, 
   gameMode,
-  showJoinConfirmation,
-  joinedGameDetails,
+  showJoinConfirmation: showJoinConfirmationProp,
+  joinedGameDetails: joinedGameDetailsProp,
   onConfirmJoin,
   onCancelJoin,
-  showCreateConfirmation,
-  createdGameDetails,
+  showCreateConfirmation: showCreateConfirmationProp,
+  createdGameDetails: createdGameDetailsProp,
   onStartGame,
   onRejectGame
 }) => {
+  const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Get state from navigation or use props
+  const showJoinConfirmation = location.state?.showJoinConfirmation || showJoinConfirmationProp;
+  const joinedGameDetails = location.state?.joinedGameDetails || joinedGameDetailsProp;
+  const showCreateConfirmation = location.state?.showCreateConfirmation || showCreateConfirmationProp;
+  const createdGameDetails = location.state?.createdGameDetails || createdGameDetailsProp;
+  
+  // Update callbacks to handle navigation
+  const handleConfirmJoin = () => {
+    if (onConfirmJoin) onConfirmJoin();
+    // Clear state
+    navigate(location.pathname, { replace: true });
+  };
+  
+  const handleCancelJoin = () => {
+    if (onCancelJoin) onCancelJoin();
+    navigate('/lobby');
+  };
+  
+  const handleStartGame = () => {
+    if (onStartGame) onStartGame();
+    // Clear state
+    navigate(location.pathname, { replace: true });
+  };
+  
+  const handleRejectGame = () => {
+    if (onRejectGame) onRejectGame();
+    navigate('/lobby');
+  };
   const {
     connected,
     players,
@@ -209,13 +242,13 @@ const GameBoard: React.FC<GameBoardProps> = ({
             <div className="confirmation-buttons">
               <button 
                 className="cancel-btn"
-                onClick={onCancelJoin}
+                onClick={handleCancelJoin}
               >
                 Cancel
               </button>
               <button 
                 className="start-game-btn"
-                onClick={onConfirmJoin}
+                onClick={handleConfirmJoin}
               >
                 Confirm
               </button>
@@ -241,13 +274,13 @@ const GameBoard: React.FC<GameBoardProps> = ({
             <div className="confirmation-buttons">
               <button 
                 className="cancel-btn"
-                onClick={onRejectGame}
+                onClick={handleRejectGame}
               >
                 Reject
               </button>
               <button 
                 className="start-game-btn"
-                onClick={onStartGame}
+                onClick={handleStartGame}
               >
                 Start Game
               </button>
@@ -256,10 +289,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
         </div>
       )}
       <div className="game-header">
-        <div className="game-code-section">
-          <span className="game-code-label">Game Code:</span>
-          <span className="game-code">{gameCode}</span>
-        </div>
         <div className="share-section">
           <div className="share-link-container">
             <input 
