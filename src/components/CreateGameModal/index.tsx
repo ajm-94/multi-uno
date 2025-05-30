@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './CreateGameModal.css';
+import '../../styles/Modal.css';
+import '../../styles/Forms.css';
+import '../../styles/Buttons.css';
 
 interface CreateGameModalProps {
-  onCreateGame: (stakes: string, maxPlayers: number, code: string, gameType: 'single' | 'tournament', winningPoints?: number) => void;
+  onCreateGame: (stakes: string, maxPlayers: number, code: string, gameType: 'single' | 'tournament') => void;
   onCancel: () => void;
 }
 
@@ -11,7 +14,6 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
   const [maxPlayers] = useState<number>(2);
   const [code, setCode] = useState<string>('');
   const [gameType, setGameType] = useState<'single' | 'tournament'>('single');
-  const [winningPoints, setWinningPoints] = useState<number>(250);
   
   // Generate a suggested random code
   React.useEffect(() => {
@@ -27,16 +29,12 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
     }
     
     const formattedStakes = stakes ? `$${stakes}` : '$0';
-    if (gameType === 'tournament') {
-      onCreateGame(formattedStakes, maxPlayers, code, gameType, winningPoints);
-    } else {
-      onCreateGame(formattedStakes, maxPlayers, code, gameType);
-    }
+    onCreateGame(formattedStakes, maxPlayers, code, gameType);
   };
   
   return (
     <div className="modal-overlay">
-      <div className="create-game-modal">
+      <div className="modal-container">
         <h2>Start New Table</h2>
         
         <form onSubmit={handleSubmit}>
@@ -75,27 +73,6 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
             </div>
           </div>
 
-          {gameType === 'tournament' && (
-            <div className="form-group">
-              <label htmlFor="winningPoints">Winning Points:</label>
-              <div className="winning-points-options">
-                <div 
-                  className={`winning-points-option ${winningPoints === 250 ? 'selected' : ''}`}
-                  onClick={() => setWinningPoints(250)}
-                >
-                  <div className="points-label">250</div>
-                  <div className="points-description">Quick Tournament</div>
-                </div>
-                <div 
-                  className={`winning-points-option ${winningPoints === 500 ? 'selected' : ''}`}
-                  onClick={() => setWinningPoints(500)}
-                >
-                  <div className="points-label">500</div>
-                  <div className="points-description">Standard Tournament</div>
-                </div>
-              </div>
-            </div>
-          )}
           
           <div className="form-group">
             <label htmlFor="stakes">Amount:</label>
@@ -126,11 +103,11 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ onCreateGame, onCance
             </select>
           </div>
           
-          <div className="modal-buttons">
-            <button type="button" className="cancel-btn" onClick={onCancel}>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-outline" onClick={onCancel}>
               Cancel
             </button>
-            <button type="submit" className="create-btn">
+            <button type="submit" className="btn btn-primary">
               Start Table
             </button>
           </div>

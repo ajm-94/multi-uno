@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateGameModal from '../CreateGameModal';
 import JoinGameModal from '../JoinGameModal';
-import { UnoCard, Player } from '../GameBoard';
 import './GameLobby.css';
 
 interface GameLobbyProps {
@@ -34,7 +33,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
     setShowJoinGameModal(false);
   };
 
-  const handleCreateRoom = (stakes: string, maxPlayers: number, code: string, gameType: 'single' | 'tournament', winningPoints?: number) => {
+  const handleCreateRoom = (stakes: string, maxPlayers: number, code: string, gameType: 'single' | 'tournament') => {
     const newRoomId = generateRandomRoomId();
     
     // Navigate to game with state
@@ -133,6 +132,57 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onBackToLanding }) => {
         >
           Show Uno Table
         </button>
+        <div style={{ marginTop: '0.5rem' }}>
+          <button
+            onClick={() => navigate('/game/ingame')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+              padding: '0',
+              opacity: 0.7
+            }}
+          >
+            Show Uno Table during game
+          </button>
+        </div>
+        <div style={{ marginTop: '0.5rem' }}>
+          <button
+            onClick={() => navigate('/game/endgame')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+              padding: '0',
+              opacity: 0.7
+            }}
+          >
+            Show Uno Game at end of Match
+          </button>
+        </div>
+        <div style={{ marginTop: '0.5rem' }}>
+          <button
+            onClick={() => navigate('/game/rematch_modal')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+              padding: '0',
+              opacity: 0.7
+            }}
+          >
+            Show Rematch Modal
+          </button>
+        </div>
       </div>
     </div>
   );

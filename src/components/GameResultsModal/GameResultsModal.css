@@ -1,0 +1,99 @@
+/* GameResultsModal specific styles */
+
+.game-results-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--card-bg);
+  border-top: 2px solid var(--card-border);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+/* Results summary */
+.results-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.winner-info,
+.loser-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.winner-text {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.loser-text {
+  color: var(--text-color);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.vs-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Action buttons */
+.results-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.results-actions .btn {
+  min-width: 150px;
+}
+
+/* Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .game-results-panel {
+    padding: 1rem;
+  }
+
+  .results-summary {
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .winner-text {
+    font-size: 1rem;
+  }
+
+
+  .results-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .results-actions .btn {
+    width: 100%;
+  }
+}

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './JoinGameModal.css';
+import '../../styles/Modal.css';
+import '../../styles/Forms.css';
+import '../../styles/Buttons.css';
 
 interface JoinGameModalProps {
   onJoinGame: (code: string) => void;
@@ -20,7 +23,7 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
   
   return (
     <div className="modal-overlay">
-      <div className="join-game-modal">
+      <div className="modal-container">
         <h2>Join Table</h2>
         
         <form onSubmit={handleSubmit}>
@@ -41,11 +44,11 @@ const JoinGameModal: React.FC<JoinGameModalProps> = ({ onJoinGame, onCancel }) =
             <small className="form-text">Enter the code provided by the table host</small>
           </div>
           
-          <div className="modal-buttons">
-            <button type="button" className="cancel-btn" onClick={onCancel}>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-outline" onClick={onCancel}>
               Cancel
             </button>
-            <button type="submit" className="join-btn">
+            <button type="submit" className="btn btn-primary">
               Join Table
             </button>
           </div>
