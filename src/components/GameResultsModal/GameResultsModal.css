@@ -1,52 +1,14 @@
 /* GameResultsModal specific styles */
 
 .game-results-panel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: var(--card-bg);
-  border-top: 2px solid var(--card-border);
+  border: 2px solid var(--card-border);
   padding: 1.5rem 2rem;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
-/* Results summary */
-.results-summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.winner-info,
-.loser-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.winner-text {
-  color: var(--primary-color);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.loser-text {
-  color: var(--text-color);
-  font-size: 1.125rem;
-  font-weight: 600;
-}
-
-.vs-text {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
 
 /* Action buttons */
 .results-actions {

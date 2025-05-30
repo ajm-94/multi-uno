@@ -134,6 +134,19 @@
   border-color: var(--card-border);
 }
 
+/* Explicitly disabled cards */
+.game-mode-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.game-mode-card.disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--card-border);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .landing-header h1 {

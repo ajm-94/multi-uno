@@ -41,10 +41,8 @@ const RequestSentModal: React.FC<RequestSentModalProps> = ({
   return (
     <div className="modal-overlay" onClick={(e) => e.stopPropagation()}>
       <div className="modal-container request-sent-modal">
-        <div className="request-icon">📤</div>
-        <h2>Request Sent!</h2>
         <p className="request-message">
-          Waiting for opponent to respond...
+          Waiting for opponent to accept..
         </p>
         <div className="countdown-container">
           <div className="countdown-circle">

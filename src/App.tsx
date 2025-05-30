@@ -11,7 +11,7 @@ const App: React.FC = () => {
 
   const handleSelectGameMode = (mode: 'lite' | 'classic' | 'duel') => {
     if (mode === 'duel') {
-      navigate('/lobby');
+      navigate('/');
     } else {
       // For now, lite and classic are coming soon
       alert(`${mode === 'lite' ? 'Uno-Lite' : 'Uno-Classic'} is coming soon!`);
@@ -29,7 +29,7 @@ const App: React.FC = () => {
     const handleReject = () => {
       alert('Rematch rejected!');
       setShowRematch(false);
-      navigate('/lobby');
+      navigate('/');
     };
     
     const handleSendNewBet = (amount: number) => {
@@ -38,7 +38,7 @@ const App: React.FC = () => {
     
     return (
       <>
-        <GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/lobby')} />
+        <GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/')} />
         <RematchModal 
           isOpen={showRematch}
           onAccept={handleAccept}
@@ -54,11 +54,11 @@ const App: React.FC = () => {
     <div className="app">
       <main>
         <Routes>
-          <Route path="/" element={<Landing onSelectGameMode={handleSelectGameMode} />} />
-          <Route path="/lobby" element={<GameLobby onBackToLanding={() => navigate('/')} />} />
-          <Route path="/game/:roomId" element={<GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/lobby')} />} />
+          <Route path="/" element={<GameLobby onBackToLanding={() => navigate('/gamemodes')} />} />
+          <Route path="/gamemodes" element={<Landing onSelectGameMode={handleSelectGameMode} />} />
+          <Route path="/game/:roomId" element={<GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/')} />} />
           <Route path="/game/rematch_modal" element={<RematchModalScreen />} />
-          <Route path="/game/ingame" element={<GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/lobby')} hideHeader={true} />} />
+          <Route path="/game/ingame" element={<GameBoard username="Test" roomId="demo" onBackToLobby={() => navigate('/')} hideHeader={true} />} />
         </Routes>
       </main>
     </div>

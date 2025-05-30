@@ -85,50 +85,14 @@
   -moz-appearance: textfield;
 }
 
-/* Override some shared styles for dark theme compatibility */
-.modal-container {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-}
-
+/* Additional styling for CreateGameModal */
 .modal-container h2 {
-  color: var(--text-color);
   text-align: center;
-}
-
-.form-control {
-  background-color: rgba(0, 0, 0, 0.2);
-  color: var(--text-color);
-  border-color: var(--card-border);
-}
-
-.form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
 }
 
 .form-control:disabled {
   background-color: rgba(0, 0, 0, 0.3);
-}
-
-/* Button overrides for theme */
-.btn-primary {
-  background-color: var(--button-primary);
-  color: #111827;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--button-hover);
-}
-
-.btn-outline {
-  background-color: var(--button-secondary);
-  color: var(--text-color);
-  border-color: transparent;
-}
-
-.btn-outline:hover:not(:disabled) {
-  background-color: var(--button-secondary-hover);
+  opacity: 0.7;
 }
 
 /* Responsive Design */

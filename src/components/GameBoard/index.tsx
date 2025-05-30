@@ -4,6 +4,7 @@ import ConfirmationModal from '../ConfirmationModal';
 import GameResultsModal from '../GameResultsModal';
 import BetInputModal from '../BetInputModal';
 import RequestSentModal from '../RequestSentModal';
+import WaitingForHostModal from '../WaitingForHostModal';
 import './GameBoard.css';
 
 interface GameBoardProps {
@@ -12,26 +13,6 @@ interface GameBoardProps {
   roomCode?: string;
   onBackToLobby: () => void;
   hideHeader?: boolean;
-  gameMode?: {
-    type: 'goatedai' | 'ring' | 'tournament';
-    mode?: 'single' | 'tournament';
-    stakes?: string;
-  };
-  showJoinConfirmation?: boolean;
-  joinedGameDetails?: {
-    code: string;
-    betAmount: string;
-  } | null;
-  onConfirmJoin?: () => void;
-  onCancelJoin?: () => void;
-  showCreateConfirmation?: boolean;
-  createdGameDetails?: {
-    code: string;
-    stakes: string;
-    type: 'single' | 'tournament';
-  } | null;
-  onStartGame?: () => void;
-  onRejectGame?: () => void;
 }
 
 // We'll define the card interface and sample data
@@ -49,48 +30,46 @@ export interface Player {
   isCurrentTurn: boolean;
 }
 
+// Constants
+const MOCK_OPPONENT_NAME = 'Saket';
+const MOCK_TABLE_CREATOR = 'Alex';
+const DEFAULT_BET_AMOUNT = '$10';
+const COUNTDOWN_DURATION = 15;
+const AI_OPPONENT_NAME = 'GoatedAI';
+
 // Mock socket connection for demo purposes
 const useMockSocket = (username: string, roomId: string) => {
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(true);
   const [players, setPlayers] = useState<Player[]>([]);
   const [hand, setHand] = useState<UnoCard[]>([]);
   const [currentCard, setCurrentCard] = useState<UnoCard | null>(null);
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [winner, setWinner] = useState<string>('');
   const [showGameResults, setShowGameResults] = useState<boolean>(false);
 
-  // Simulate socket connection
+  // Initialize game state immediately
   useEffect(() => {
-    console.log(`Connecting to game room ${roomId} as ${username}...`);
+    console.log(`Connected to game room ${roomId} as ${username}`);
     
-    // Simulate connection delay
-    const timer = setTimeout(() => {
-      setConnected(true);
-      
-      // Mock initial game state - only GoatedAI as opponent
-      const mockPlayers: Player[] = [
-        { id: '1', name: username, cardCount: 7, isCurrentTurn: true },
-        { id: '2', name: 'GoatedAI', cardCount: 5, isCurrentTurn: false },
-      ];
-      
-      const mockHand: UnoCard[] = [
-        { id: 'c1', color: 'red', value: '5', type: 'number' },
-        { id: 'c2', color: 'blue', value: '9', type: 'number' },
-        { id: 'c3', color: 'green', value: '2', type: 'number' },
-        { id: 'c4', color: 'yellow', value: 'Skip', type: 'action' },
-        { id: 'c5', color: 'red', value: 'Reverse', type: 'action' },
-        { id: 'c6', color: 'black', value: 'Wild', type: 'wild' },
-        { id: 'c7', color: 'blue', value: '1', type: 'number' },
-      ];
-      
-      const mockCurrentCard: UnoCard = { id: 'cc1', color: 'red', value: '8', type: 'number' };
-      
-      setPlayers(mockPlayers);
-      setHand(mockHand);
-      setCurrentCard(mockCurrentCard);
-    }, 1000);
+    // Mock initial game state - only GoatedAI as opponent
+    const mockPlayers: Player[] = [
+      { id: '1', name: username, cardCount: 7, isCurrentTurn: true },
+      { id: '2', name: AI_OPPONENT_NAME, cardCount: 5, isCurrentTurn: false },
+    ];
     
-    return () => clearTimeout(timer);
+    const mockHand: UnoCard[] = [
+      { id: 'c1', color: 'red', value: '5', type: 'number' },
+      { id: 'c2', color: 'blue', value: '9', type: 'number' },
+      { id: 'c3', color: 'green', value: '2', type: 'number' },
+      { id: 'c4', color: 'yellow', value: 'Skip', type: 'action' },
+      { id: 'c5', color: 'red', value: 'Reverse', type: 'action' },
+      { id: 'c6', color: 'black', value: 'Wild', type: 'wild' },
+      { id: 'c7', color: 'blue', value: '1', type: 'number' },
+    ];
+    
+    const mockCurrentCard: UnoCard = { id: 'cc1', color: 'red', value: '8', type: 'number' };
+    
+    setPlayers(mockPlayers);
+    setHand(mockHand);
+    setCurrentCard(mockCurrentCard);
   }, [username, roomId]);
 
 
@@ -134,8 +113,6 @@ const useMockSocket = (username: string, roomId: string) => {
     players,
     hand,
     currentCard,
-    gameOver,
-    winner,
     showGameResults,
     setShowGameResults,
     drawCard,
@@ -148,16 +125,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   roomId, 
   roomCode, 
   onBackToLobby, 
-  hideHeader = false,
-  gameMode,
-  showJoinConfirmation: showJoinConfirmationProp,
-  joinedGameDetails: joinedGameDetailsProp,
-  onConfirmJoin,
-  onCancelJoin,
-  showCreateConfirmation: showCreateConfirmationProp,
-  createdGameDetails: createdGameDetailsProp,
-  onStartGame,
-  onRejectGame
+  hideHeader = false
 }) => {
   const params = useParams();
   const location = useLocation();
@@ -166,41 +134,42 @@ const GameBoard: React.FC<GameBoardProps> = ({
   // Check if we're on the endgame route
   const isEndgameRoute = params.roomId === 'endgame';
   
-  // Get state from navigation or use props
-  const showJoinConfirmation = location.state?.showJoinConfirmation || showJoinConfirmationProp;
-  const joinedGameDetails = location.state?.joinedGameDetails || joinedGameDetailsProp;
-  const showCreateConfirmation = location.state?.showCreateConfirmation || showCreateConfirmationProp;
-  const createdGameDetails = location.state?.createdGameDetails || createdGameDetailsProp;
+  // Check if we're on the waitingforopponent route
+  const isWaitingForOpponentRoute = params.roomId === 'waitingforopponent';
   
-  // Update callbacks to handle navigation
+  // Check if we're on the acceptopponent route
+  const isAcceptOpponentRoute = params.roomId === 'acceptopponent';
+  
+  // Check if we're on the joingame route
+  const isJoinGameRoute = params.roomId === 'joingame';
+  
+  // Get state from navigation
+  const showJoinConfirmation = location.state?.showJoinConfirmation;
+  const joinedGameDetails = location.state?.joinedGameDetails;
+  const showCreateConfirmation = location.state?.showCreateConfirmation;
+  const createdGameDetails = location.state?.createdGameDetails;
+  
+  // Handle navigation callbacks
   const handleConfirmJoin = () => {
-    if (onConfirmJoin) onConfirmJoin();
-    // Clear state
     navigate(location.pathname, { replace: true });
   };
   
   const handleCancelJoin = () => {
-    if (onCancelJoin) onCancelJoin();
-    navigate('/lobby');
+    navigate('/');
   };
   
   const handleStartGame = () => {
-    if (onStartGame) onStartGame();
-    // Clear state
     navigate(location.pathname, { replace: true });
   };
   
   const handleRejectGame = () => {
-    if (onRejectGame) onRejectGame();
-    navigate('/lobby');
+    navigate('/');
   };
   const {
     connected,
     players,
     hand,
     currentCard,
-    gameOver,
-    winner,
     showGameResults,
     setShowGameResults,
     drawCard,
@@ -208,9 +177,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   } = useMockSocket(username, roomId);
 
   const [showCopied, setShowCopied] = useState<boolean>(false);
-  const [timeRemaining, setTimeRemaining] = useState<number>(15);
+  const [timeRemaining, setTimeRemaining] = useState<number>(COUNTDOWN_DURATION);
   const [showBetInputModal, setShowBetInputModal] = useState<boolean>(false);
   const [showRequestSentModal, setShowRequestSentModal] = useState<boolean>(false);
+  const [showWaitingForHost, setShowWaitingForHost] = useState<boolean>(false);
 
   const currentPlayer = players.find(p => p.name === username);
   const isPlayerTurn = currentPlayer?.isCurrentTurn || false;
@@ -240,14 +210,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
   }, [hideHeader, timeRemaining]);
 
 
-  if (!connected) {
-    return (
-      <div className="connecting">
-        <div className="loader"></div>
-        <p>Connecting to game room {roomId}...</p>
-      </div>
-    );
-  }
 
   const gameCode = roomCode || roomId;
   const shareableLink = `${window.location.origin}?join=${gameCode}`;
@@ -280,15 +242,59 @@ const GameBoard: React.FC<GameBoardProps> = ({
           onConfirm={handleStartGame}
           title="Start Game"
           details={[
-            { label: 'Opponent Name', value: 'Saket' },
+            { label: 'Opponent Name', value: MOCK_OPPONENT_NAME },
             { label: 'Bet Amount', value: createdGameDetails.stakes }
           ]}
           confirmText="Start Game"
           cancelText="Reject"
         />
       )}
+      {isAcceptOpponentRoute && (
+        <ConfirmationModal
+          isOpen={true}
+          onClose={() => navigate('/')}
+          onConfirm={() => {
+            alert('Game confirmed!');
+            navigate('/');
+          }}
+          title="Opponent Found"
+          details={[
+            { label: 'Opponent', value: MOCK_OPPONENT_NAME },
+            { label: 'Bet Amount', value: DEFAULT_BET_AMOUNT }
+          ]}
+          confirmText="Confirm"
+          cancelText="Reject"
+        />
+      )}
+      {isJoinGameRoute && !showWaitingForHost && (
+        <ConfirmationModal
+          isOpen={true}
+          onClose={() => navigate('/')}
+          onConfirm={() => {
+            setShowWaitingForHost(true);
+          }}
+          title="Join Table"
+          details={[
+            { label: 'Table Creator', value: MOCK_TABLE_CREATOR },
+            { label: 'Bet Amount', value: DEFAULT_BET_AMOUNT }
+          ]}
+          confirmText="Confirm"
+          cancelText="Cancel"
+        />
+      )}
       {!hideHeader && (
-        <div className="game-header">
+        <div className={`game-header ${isEndgameRoute ? 'endgame-header' : ''}`}>
+          {isEndgameRoute && (
+            <GameResultsModal
+              isOpen={showGameResults}
+              onRematch={() => {
+                setShowBetInputModal(true);
+              }}
+              onReturnToLobby={() => {
+                navigate('/');
+              }}
+            />
+          )}
           <div className="share-section">
             <div className="share-link-container">
               <input 
@@ -317,27 +323,20 @@ const GameBoard: React.FC<GameBoardProps> = ({
               </button>
             </div>
           </div>
-          <button className="back-to-lobby-btn" onClick={onBackToLobby}>
-            Back to Lobby
-          </button>
+          {!isEndgameRoute && (
+            <button className="back-to-lobby-btn" onClick={onBackToLobby}>
+              {isWaitingForOpponentRoute ? 'End Table' : 'Back to Lobby'}
+            </button>
+          )}
         </div>
       )}
 
-      {gameOver && (
-        <div className="game-over-overlay">
-          <div className="game-over-modal">
-            <h2>Game Over!</h2>
-            <p>{winner === username ? 'Congratulations! You won!' : `${winner} won the game!`}</p>
-            <button onClick={onBackToLobby}>Back to Lobby</button>
-          </div>
-        </div>
-      )}
 
       <div className="game-content">
         <div className="game-table dark-theme">
           {/* Opponent (GoatedAI) area at the top */}
           <div className="opponent-area">
-          <div className="player-label dealer-label">Waiting for Player</div>
+          <div className="player-label dealer-label">Pavels</div>
           <div className="dealer-cards-container">
             <div className="card-back uno-card"></div>
             <div className="card-back uno-card"></div>
@@ -349,7 +348,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
           <div className="card-area">
             <div className="center-area-wrapper">
               <div className="deck-area">
-                <div className="uno-card card-back yellow-back" onClick={() => isPlayerTurn && !gameOver && drawCard()}>
+                <div className="uno-card card-back yellow-back" onClick={() => isPlayerTurn && drawCard()}>
                   <div className="card-back-design">↺</div>
                 </div>
               </div>
@@ -417,36 +416,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
           </div>
         </div>
         
-        {/* Bet and Balance info */}
+        {/* Bet info */}
         <div className="game-info-bar">
           <div className="bet-info">
             <span className="info-label">Bet:</span>
             <span className="info-value">$1.00</span>
           </div>
-          <div className="balance-info">
-            <span className="info-label">Balance:</span>
-            <span className="info-value">$10.00</span>
-          </div>
         </div>
       </div>
       </div>
       
-      {/* Game Results Modal */}
-      <GameResultsModal
-        isOpen={showGameResults}
-        winner={{ id: '1', name: 'You', cardsLeft: 0 }}
-        loser={{ id: '2', name: 'GoatedAI', cardsLeft: 3 }}
-        gameStats={{
-          duration: '5:32',
-          totalTurns: 24
-        }}
-        onRematch={() => {
-          setShowBetInputModal(true);
-        }}
-        onReturnToLobby={() => {
-          navigate('/lobby');
-        }}
-      />
       
       {/* Bet Input Modal for Rematch */}
       <BetInputModal
@@ -467,6 +446,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
           setShowRequestSentModal(false);
           alert('Request timed out. The opponent did not respond.');
         }}
+      />
+      
+      {/* Waiting for Host Modal */}
+      <WaitingForHostModal
+        isOpen={showWaitingForHost}
+        onClose={() => {
+          setShowWaitingForHost(false);
+          navigate('/');
+        }}
+        hostName={MOCK_TABLE_CREATOR}
       />
     </div>
   );

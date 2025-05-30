@@ -15,10 +15,10 @@
 }
 
 .modal-container {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
   max-width: 500px;
   width: 90%;
   animation: slideUp 0.3s ease-out;
@@ -29,7 +29,7 @@
 }
 
 .modal-header h2 {
-  color: #1a1a1a;
+  color: var(--text-color);
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
@@ -49,12 +49,12 @@
 
 /* Confirmation Modal Specific Styles */
 .confirmation-modal {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 12px;
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -66,21 +66,22 @@
   display: flex;
   justify-content: space-between;
   margin: 0.5rem 0;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .game-code-display {
   text-align: center;
   margin: 1.5rem 0;
   padding: 1rem;
-  background-color: #f3f4f6;
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .game-code-display .code {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #3b82f6;
+  color: #60a5fa;
   letter-spacing: 2px;
 }
 

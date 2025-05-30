@@ -28,9 +28,9 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #60a5fa;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -40,52 +40,54 @@
 
 /* Secondary Button */
 .btn-secondary {
-  background-color: #6b7280;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #4b5563;
+  background-color: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Success Button */
 .btn-success {
-  background-color: #10b981;
+  background-color: #059669;
   color: white;
 }
 
 .btn-success:hover:not(:disabled) {
-  background-color: #059669;
+  background-color: #10b981;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Danger Button */
 .btn-danger {
-  background-color: #ef4444;
+  background-color: #dc2626;
   color: white;
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #dc2626;
+  background-color: #ef4444;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Cancel/Outline Button */
 .btn-outline,
 .cancel-btn {
   background-color: transparent;
-  color: #6b7280;
-  border: 2px solid #e5e7eb;
+  color: var(--text-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-outline:hover:not(:disabled),
 .cancel-btn:hover:not(:disabled) {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-color);
   transform: translateY(-1px);
 }
 

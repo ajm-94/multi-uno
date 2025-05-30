@@ -9,11 +9,11 @@ const Landing: React.FC<LandingProps> = ({ onSelectGameMode }) => {
   return (
     <div className="landing-page">
       <div className="game-modes">
-        <div className="game-mode-card" onClick={() => onSelectGameMode('lite')}>
+        <div className="game-mode-card disabled">
           <h2>Uno-Lite</h2>
         </div>
 
-        <div className="game-mode-card" onClick={() => onSelectGameMode('classic')}>
+        <div className="game-mode-card disabled">
           <h2>Uno-Classic</h2>
         </div>
 
