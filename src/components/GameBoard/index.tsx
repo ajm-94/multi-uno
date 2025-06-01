@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../ConfirmationModal';
-import GameResultsModal from '../GameResultsModal';
-import BetInputModal from '../BetInputModal';
-import RequestSentModal from '../RequestSentModal';
+import GameResultsInlineUI from '../GameResultsInlineUI';
+import RematchInlineUI from '../RematchInlineUI';
+import RematchDemoInlineUI from '../RematchDemoInlineUI';
 import WaitingForHostModal from '../WaitingForHostModal';
+import CreateGameInlineUI from '../CreateGameInlineUI';
+import JoinGameInlineUI from '../JoinGameInlineUI';
+import AcceptOpponentInlineUI from '../AcceptOpponentInlineUI';
 import './GameBoard.css';
 
 interface GameBoardProps {
@@ -13,6 +16,7 @@ interface GameBoardProps {
   roomCode?: string;
   onBackToLobby: () => void;
   hideHeader?: boolean;
+  isLandingPage?: boolean;
 }
 
 // We'll define the card interface and sample data
@@ -23,12 +27,6 @@ export interface UnoCard {
   type: 'number' | 'action' | 'wild';
 }
 
-export interface Player {
-  id: string;
-  name: string;
-  cardCount: number;
-  isCurrentTurn: boolean;
-}
 
 // Constants
 const MOCK_OPPONENT_NAME = 'Saket';
@@ -38,116 +36,56 @@ const COUNTDOWN_DURATION = 15;
 const AI_OPPONENT_NAME = 'GoatedAI';
 
 // Mock socket connection for demo purposes
-const useMockSocket = (username: string, roomId: string) => {
-  const [connected, setConnected] = useState(true);
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [hand, setHand] = useState<UnoCard[]>([]);
-  const [currentCard, setCurrentCard] = useState<UnoCard | null>(null);
+const useMockSocket = () => {
   const [showGameResults, setShowGameResults] = useState<boolean>(false);
-
-  // Initialize game state immediately
-  useEffect(() => {
-    console.log(`Connected to game room ${roomId} as ${username}`);
-    
-    // Mock initial game state - only GoatedAI as opponent
-    const mockPlayers: Player[] = [
-      { id: '1', name: username, cardCount: 7, isCurrentTurn: true },
-      { id: '2', name: AI_OPPONENT_NAME, cardCount: 5, isCurrentTurn: false },
-    ];
-    
-    const mockHand: UnoCard[] = [
-      { id: 'c1', color: 'red', value: '5', type: 'number' },
-      { id: 'c2', color: 'blue', value: '9', type: 'number' },
-      { id: 'c3', color: 'green', value: '2', type: 'number' },
-      { id: 'c4', color: 'yellow', value: 'Skip', type: 'action' },
-      { id: 'c5', color: 'red', value: 'Reverse', type: 'action' },
-      { id: 'c6', color: 'black', value: 'Wild', type: 'wild' },
-      { id: 'c7', color: 'blue', value: '1', type: 'number' },
-    ];
-    
-    const mockCurrentCard: UnoCard = { id: 'cc1', color: 'red', value: '8', type: 'number' };
-    
-    setPlayers(mockPlayers);
-    setHand(mockHand);
-    setCurrentCard(mockCurrentCard);
-  }, [username, roomId]);
-
 
   // Mock function to draw a card
   const drawCard = () => {
-    const colors: Array<'red' | 'blue' | 'green' | 'yellow'> = ['red', 'blue', 'green', 'yellow'];
-    const values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Skip', 'Reverse', '+2'];
-    
-    // Generate a random card
-    const newCard: UnoCard = {
-      id: `c${Date.now()}`,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      value: values[Math.floor(Math.random() * values.length)],
-      type: ['Skip', 'Reverse', '+2'].includes(values[Math.floor(Math.random() * values.length)]) 
-        ? 'action' : 'number'
-    };
-    
-    // Add to hand
-    setHand(prev => [...prev, newCard]);
-    
-    // Skip turn
-    setPlayers(prev => {
-      const currentPlayerIndex = prev.findIndex(p => p.isCurrentTurn);
-      const nextPlayerIndex = (currentPlayerIndex + 1) % prev.length;
-      
-      return prev.map((player, index) => ({
-        ...player,
-        isCurrentTurn: index === nextPlayerIndex
-      }));
-    });
-  };
-
-  // Mock function to call "UNO"
-  const callUno = () => {
-    console.log(`${username} called UNO!`);
-    // Could add visual feedback here in the future
+    console.log('Drawing a card...');
+    // In a real implementation, this would draw a card from the deck
   };
 
   return {
-    connected,
-    players,
-    hand,
-    currentCard,
     showGameResults,
     setShowGameResults,
-    drawCard,
-    callUno
+    drawCard
   };
 };
 
 const GameBoard: React.FC<GameBoardProps> = ({ 
-  username, 
+  username: _username, 
   roomId, 
   roomCode, 
   onBackToLobby, 
-  hideHeader = false
+  hideHeader = false,
+  isLandingPage = false
 }) => {
   const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Check if we're on the endgame route
-  const isEndgameRoute = params.roomId === 'endgame';
+  // Check if we're on the endgame route (use roomId prop, not params)
+  const isEndgameRoute = roomId === 'endgame';
   
-  // Check if we're on the waitingforopponent route
-  const isWaitingForOpponentRoute = params.roomId === 'waitingforopponent';
+  // Check if we're on the waitingforopponent route (use roomId prop, not params)
+  const isWaitingForOpponentRoute = roomId === 'waitingforopponent';
   
-  // Check if we're on the acceptopponent route
-  const isAcceptOpponentRoute = params.roomId === 'acceptopponent';
+  // Check if we're on the acceptopponent route (use roomId prop, not params)
+  const isAcceptOpponentRoute = roomId === 'acceptopponent';
   
-  // Check if we're on the joingame route
-  const isJoinGameRoute = params.roomId === 'joingame';
+  // Check if we're on the joingame route (use roomId prop, not params)
+  const isJoinGameRoute = roomId === 'joingame';
+  
+  // Check if we're on the rematch_modal route (use roomId prop, not params)
+  const isRematchModalRoute = roomId === 'rematch_modal';
+  
+  // Check if we're on the starttable route (use roomId prop, not params)
+  const isStartTableRoute = roomId === 'starttable';
   
   // Get state from navigation
   const showJoinConfirmation = location.state?.showJoinConfirmation;
   const joinedGameDetails = location.state?.joinedGameDetails;
-  const showCreateConfirmation = location.state?.showCreateConfirmation;
-  const createdGameDetails = location.state?.createdGameDetails;
+  const showWaitingForHostProp = location.state?.showWaitingForHost;
   
   // Handle navigation callbacks
   const handleConfirmJoin = () => {
@@ -158,32 +96,19 @@ const GameBoard: React.FC<GameBoardProps> = ({
     navigate('/');
   };
   
-  const handleStartGame = () => {
-    navigate(location.pathname, { replace: true });
-  };
-  
-  const handleRejectGame = () => {
-    navigate('/');
-  };
   const {
-    connected,
-    players,
-    hand,
-    currentCard,
     showGameResults,
     setShowGameResults,
-    drawCard,
-    callUno
-  } = useMockSocket(username, roomId);
+    drawCard
+  } = useMockSocket();
 
   const [showCopied, setShowCopied] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(COUNTDOWN_DURATION);
-  const [showBetInputModal, setShowBetInputModal] = useState<boolean>(false);
-  const [showRequestSentModal, setShowRequestSentModal] = useState<boolean>(false);
-  const [showWaitingForHost, setShowWaitingForHost] = useState<boolean>(false);
+  const [waitingForRematchResponse, setWaitingForRematchResponse] = useState<boolean>(false);
+  const [showWaitingForHost, setShowWaitingForHost] = useState<boolean>(showWaitingForHostProp || false);
+  const [showCreateGameUI, setShowCreateGameUI] = useState<boolean>(false);
+  const [showJoinGameUI, setShowJoinGameUI] = useState<boolean>(false);
 
-  const currentPlayer = players.find(p => p.name === username);
-  const isPlayerTurn = currentPlayer?.isCurrentTurn || false;
   
   // Show game results modal on endgame route
   useEffect(() => {
@@ -220,8 +145,40 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setTimeout(() => setShowCopied(false), 3000);
   };
 
+  const generateRandomRoomId = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
+  const handleCreateRoom = (stakes: string, _maxPlayers: number, code: string, gameType: 'single' | 'tournament') => {
+    // Navigate directly to waiting for opponent screen
+    navigate('/waitingforopponent', {
+      state: {
+        createdGameDetails: {
+          code,
+          stakes,
+          type: gameType
+        }
+      }
+    });
+  };
+
+  const handleJoinRoom = (code: string) => {
+    setShowJoinGameUI(false);
+    const newRoomId = generateRandomRoomId();
+    navigate(`/${newRoomId}`, {
+      state: {
+        showWaitingForHost: true,
+        joinedGameDetails: {
+          code: code,
+          betAmount: DEFAULT_BET_AMOUNT
+        }
+      }
+    });
+  };
+
   return (
     <div className="game-board">
+      
       {showJoinConfirmation && joinedGameDetails && (
         <ConfirmationModal
           isOpen={showJoinConfirmation}
@@ -235,95 +192,39 @@ const GameBoard: React.FC<GameBoardProps> = ({
           cancelText="Cancel"
         />
       )}
-      {showCreateConfirmation && createdGameDetails && (
-        <ConfirmationModal
-          isOpen={showCreateConfirmation}
-          onClose={handleRejectGame}
-          onConfirm={handleStartGame}
-          title="Start Game"
-          details={[
-            { label: 'Opponent Name', value: MOCK_OPPONENT_NAME },
-            { label: 'Bet Amount', value: createdGameDetails.stakes }
-          ]}
-          confirmText="Start Game"
-          cancelText="Reject"
-        />
-      )}
-      {isAcceptOpponentRoute && (
-        <ConfirmationModal
-          isOpen={true}
-          onClose={() => navigate('/')}
-          onConfirm={() => {
-            alert('Game confirmed!');
-            navigate('/');
-          }}
-          title="Opponent Found"
-          details={[
-            { label: 'Opponent', value: MOCK_OPPONENT_NAME },
-            { label: 'Bet Amount', value: DEFAULT_BET_AMOUNT }
-          ]}
-          confirmText="Confirm"
-          cancelText="Reject"
-        />
-      )}
-      {isJoinGameRoute && !showWaitingForHost && (
-        <ConfirmationModal
-          isOpen={true}
-          onClose={() => navigate('/')}
-          onConfirm={() => {
-            setShowWaitingForHost(true);
-          }}
-          title="Join Table"
-          details={[
-            { label: 'Table Creator', value: MOCK_TABLE_CREATOR },
-            { label: 'Bet Amount', value: DEFAULT_BET_AMOUNT }
-          ]}
-          confirmText="Confirm"
-          cancelText="Cancel"
-        />
-      )}
-      {!hideHeader && (
-        <div className={`game-header ${isEndgameRoute ? 'endgame-header' : ''}`}>
-          {isEndgameRoute && (
-            <GameResultsModal
-              isOpen={showGameResults}
-              onRematch={() => {
-                setShowBetInputModal(true);
-              }}
-              onReturnToLobby={() => {
-                navigate('/');
-              }}
-            />
-          )}
-          <div className="share-section">
-            <div className="share-link-container">
-              <input 
-                type="text" 
-                value={shareableLink} 
-                readOnly 
-                className="share-link-input"
-                onClick={(e) => e.currentTarget.select()}
-              />
-              <button className="share-button" onClick={handleCopyLink}>
-                {showCopied ? (
-                  <>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Copy
-                  </>
-                )}
-              </button>
+      {!hideHeader && !isLandingPage && !isWaitingForOpponentRoute && !isAcceptOpponentRoute && !isEndgameRoute && !isStartTableRoute && !isRematchModalRoute && !isJoinGameRoute && (
+        <div className="game-header">
+          {!isEndgameRoute && !isLandingPage && (
+            <div className="share-section">
+              <div className="share-link-container">
+                <input 
+                  type="text" 
+                  value={shareableLink} 
+                  readOnly 
+                  className="share-link-input"
+                  onClick={(e) => e.currentTarget.select()}
+                />
+                <button className="share-button" onClick={handleCopyLink}>
+                  {showCopied ? (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-          {!isEndgameRoute && (
+          )}
+          {!isEndgameRoute && !isLandingPage && (
             <button className="back-to-lobby-btn" onClick={onBackToLobby}>
               {isWaitingForOpponentRoute ? 'End Table' : 'Back to Lobby'}
             </button>
@@ -332,8 +233,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
       )}
 
 
-      <div className="game-content">
-        <div className="game-table dark-theme">
+      {(
+        <div className="game-content">
+          <div className="game-table dark-theme">
           {/* Opponent (GoatedAI) area at the top */}
           <div className="opponent-area">
           <div className="player-label dealer-label">Pavels</div>
@@ -348,7 +250,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
           <div className="card-area">
             <div className="center-area-wrapper">
               <div className="deck-area">
-                <div className="uno-card card-back yellow-back" onClick={() => isPlayerTurn && drawCard()}>
+                <div className="uno-card card-back yellow-back" onClick={() => drawCard()}>
                   <div className="card-back-design">↺</div>
                 </div>
               </div>
@@ -419,34 +321,144 @@ const GameBoard: React.FC<GameBoardProps> = ({
         {/* Bet info */}
         <div className="game-info-bar">
           <div className="bet-info">
-            <span className="info-label">Bet:</span>
+            <span className="info-label">Payout:</span>
             <span className="info-value">$1.00</span>
           </div>
         </div>
       </div>
       </div>
+      )}
       
+      {/* Landing Page UI */}
+      {isLandingPage && (
+        <div className="inline-ui-container">
+          {!showCreateGameUI && !showJoinGameUI ? (
+            <div className="lobby-actions">
+              <button 
+                className="btn btn-primary"
+                onClick={() => setShowCreateGameUI(true)}
+              >
+                Start My Table
+              </button>
+              <button 
+                className="btn btn-outline"
+                onClick={() => setShowJoinGameUI(true)}
+              >
+                Join Table
+              </button>
+            </div>
+          ) : showCreateGameUI ? (
+            <CreateGameInlineUI
+              onCreateGame={handleCreateRoom}
+              onCancel={() => setShowCreateGameUI(false)}
+            />
+          ) : (
+            <JoinGameInlineUI
+              onJoinGame={handleJoinRoom}
+              onCancel={() => setShowJoinGameUI(false)}
+            />
+          )}
+        </div>
+      )}
       
-      {/* Bet Input Modal for Rematch */}
-      <BetInputModal
-        isOpen={showBetInputModal}
-        onSendRequest={(amount) => {
-          setShowBetInputModal(false);
-          setShowRequestSentModal(true);
-          console.log(`Sending rematch request with bet amount: $${amount}`);
-        }}
-        onCancel={() => setShowBetInputModal(false)}
-        defaultAmount={10}
-      />
+      {/* Waiting for Opponent UI */}
+      {isWaitingForOpponentRoute && (
+        <div className="inline-ui-container">
+          <div className="waiting-ui-section">
+            <div className="share-link-container">
+              <input 
+                type="text" 
+                value={shareableLink} 
+                readOnly 
+                className="share-link-input"
+                onClick={(e) => e.currentTarget.select()}
+              />
+              <button className="share-button" onClick={handleCopyLink}>
+                {showCopied ? (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H16C17.1046 21 18 20.1046 18 19V18M8 5C8 6.10457 8.89543 7 10 7H12C13.1046 7 14 6.10457 14 5M8 5C8 3.89543 8.89543 3 10 3H12C13.1046 3 14 3.89543 14 5M14 5H16C17.1046 5 18 5.89543 18 7V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Copy
+                  </>
+                )}
+              </button>
+            </div>
+            <button className="btn btn-outline end-table-btn" onClick={onBackToLobby}>
+              End Table
+            </button>
+          </div>
+        </div>
+      )}
       
-      {/* Request Sent Modal */}
-      <RequestSentModal
-        isOpen={showRequestSentModal}
-        onTimeout={() => {
-          setShowRequestSentModal(false);
-          alert('Request timed out. The opponent did not respond.');
-        }}
-      />
+      {/* Accept Opponent UI */}
+      {isAcceptOpponentRoute && (
+        <div className="inline-ui-container">
+          <AcceptOpponentInlineUI
+            opponentName={MOCK_OPPONENT_NAME}
+            betAmount={DEFAULT_BET_AMOUNT}
+            onConfirm={() => {
+              alert('Game confirmed!');
+              navigate('/');
+            }}
+            onReject={() => navigate('/')}
+          />
+        </div>
+      )}
+      
+      {/* Endgame Results UI */}
+      {isEndgameRoute && (
+        <div className="inline-ui-container">
+          <RematchInlineUI
+            onSendRematch={(amount) => {
+              setWaitingForRematchResponse(true);
+              console.log(`Sending rematch request with bet amount: $${amount}`);
+              // Simulate response timeout
+              setTimeout(() => {
+                setWaitingForRematchResponse(false);
+                alert('Request timed out. The opponent did not respond.');
+              }, 15000);
+            }}
+            waitingForResponse={waitingForRematchResponse}
+            opponentName={AI_OPPONENT_NAME}
+            previousBetAmount={10}
+          />
+        </div>
+      )}
+      
+      {/* Rematch Modal Demo UI */}
+      {isRematchModalRoute && (
+        <div className="inline-ui-container">
+          <RematchDemoInlineUI />
+        </div>
+      )}
+      
+      {/* Start Table UI */}
+      {isStartTableRoute && (
+        <div className="inline-ui-container">
+          <CreateGameInlineUI
+            onCreateGame={handleCreateRoom}
+            onCancel={() => navigate('/')}
+          />
+        </div>
+      )}
+      
+      {/* Join Game UI */}
+      {isJoinGameRoute && (
+        <div className="inline-ui-container">
+          <JoinGameInlineUI
+            onJoinGame={handleJoinRoom}
+            onCancel={() => navigate('/')}
+          />
+        </div>
+      )}
       
       {/* Waiting for Host Modal */}
       <WaitingForHostModal

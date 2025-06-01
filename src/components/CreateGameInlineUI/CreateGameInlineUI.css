@@ -1,0 +1,170 @@
+/* CreateGameInlineUI styles */
+.create-game-inline-ui {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+.create-game-form {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.form-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inline-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  min-width: 100px;
+  margin: 0;
+}
+
+/* Game type buttons */
+.game-type-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.type-btn {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.type-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.type-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Stakes input */
+.stakes-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.currency-symbol {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-right: 0.25rem;
+}
+
+.stakes-input-inline {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  width: 100px;
+  outline: none;
+  text-align: right;
+}
+
+.stakes-input-inline::-webkit-inner-spin-button,
+.stakes-input-inline::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Players select */
+.players-select {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.players-select:focus {
+  border-color: var(--primary-color);
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Small buttons */
+.btn-sm {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+/* Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create-game-form {
+    gap: 1rem;
+  }
+  
+  .form-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .inline-label {
+    min-width: auto;
+  }
+  
+  .game-type-buttons {
+    width: 100%;
+  }
+  
+  .type-btn {
+    flex: 1;
+  }
+  
+  .stakes-input-wrapper,
+  .players-select {
+    width: 100%;
+  }
+  
+  .form-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .btn-sm {
+    width: 100%;
+  }
+}

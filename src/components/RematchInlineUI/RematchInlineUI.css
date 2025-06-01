@@ -1,0 +1,152 @@
+/* RematchInlineUI styles */
+.rematch-inline-ui {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+.rematch-inline-ui.waiting {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.rematch-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.rematch-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Rematch bet form */
+.rematch-bet-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.bet-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.bet-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.currency-symbol {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-right: 0.25rem;
+}
+
+.bet-input-inline {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  width: 80px;
+  outline: none;
+  text-align: right;
+}
+
+.bet-input-inline::-webkit-inner-spin-button,
+.bet-input-inline::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Waiting state */
+.waiting-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.rematch-text {
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.rematch-timer {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Small buttons */
+.btn-sm {
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .rematch-inline-ui {
+    padding: 0.75rem 1rem;
+  }
+  
+  .rematch-bet-form {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .bet-input-wrapper {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .bet-input-inline {
+    flex: 1;
+  }
+  
+  .btn-sm {
+    width: 100%;
+    max-width: 200px;
+  }
+}

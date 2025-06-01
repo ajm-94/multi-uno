@@ -1,0 +1,131 @@
+/* RematchDemoInlineUI specific styles */
+
+.rematch-demo-inline-ui {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  animation: slideUp 0.3s ease-out;
+}
+
+.rematch-title {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+}
+
+.rematch-main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rematch-message {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.bet-display {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.rematch-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.rematch-actions .btn {
+  min-width: 120px;
+}
+
+/* Bet change section */
+.rematch-bet-change {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.bet-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bet-input-group label {
+  color: var(--text-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.bet-input {
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-color);
+  font-size: 1rem;
+  width: 150px;
+  transition: all 0.2s;
+}
+
+.bet-input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .rematch-demo-inline-ui {
+    padding: 1.5rem;
+  }
+  
+  .rematch-title {
+    font-size: 1.25rem;
+  }
+  
+  .rematch-actions {
+    flex-direction: column;
+  }
+  
+  .rematch-actions .btn {
+    width: 100%;
+  }
+}
