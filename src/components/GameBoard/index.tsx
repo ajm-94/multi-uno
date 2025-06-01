@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../ConfirmationModal';
-import GameResultsInlineUI from '../GameResultsInlineUI';
 import RematchInlineUI from '../RematchInlineUI';
 import RematchDemoInlineUI from '../RematchDemoInlineUI';
 import WaitingForHostModal from '../WaitingForHostModal';
@@ -60,7 +59,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
   hideHeader = false,
   isLandingPage = false
 }) => {
-  const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   

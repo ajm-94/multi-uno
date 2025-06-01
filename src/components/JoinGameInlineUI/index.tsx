@@ -48,7 +48,10 @@ const JoinGameInlineUI: React.FC<JoinGameInlineUIProps> = ({ onJoinGame, onCance
   const handleConfirmJoin = () => {
     setWaitingForHost(true);
     // In a real app, this would notify the host
-    // After some time or when the host starts, onJoinGame would be called
+    // Simulate host starting the game after a delay
+    setTimeout(() => {
+      onJoinGame(gameCode);
+    }, 2000);
   };
 
   const handleCancel = () => {

@@ -10,9 +10,9 @@ interface GameResultsInlineUIProps {
 
 const GameResultsInlineUI: React.FC<GameResultsInlineUIProps> = ({
   onRematch,
-  onReturnToLobby,
-  winner = 'GoatedAI',
-  isWinner = false
+  onReturnToLobby: _onReturnToLobby,
+  winner: _winner = 'GoatedAI',
+  isWinner: _isWinner = false
 }) => {
   return (
     <div className="game-results-inline-ui">
